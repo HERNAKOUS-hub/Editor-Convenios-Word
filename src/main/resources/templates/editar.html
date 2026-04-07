@@ -1,138 +1,129 @@
 <!doctype html>
 <html xmlns:th="http://www.thymeleaf.org">
-  <head>
-    <meta charset="UTF-8" />
-    <title>Editar Datos</title>
-    <style>
-      body {
-        font-family: sans-serif;
-        background: #f4f7f6;
-        padding: 20px;
-      }
-      .card {
-        background: white;
-        padding: 20px;
-        border-radius: 8px;
-        max-width: 800px;
-        margin: auto;
-        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-      }
-      .item {
-        margin-bottom: 25px;
-        border-bottom: 1px solid #eee;
-        padding-bottom: 15px;
-      }
-      .original {
-        color: #d9534f;
-        font-size: 0.9em;
-        margin-bottom: 5px;
-        font-weight: bold;
-      }
 
-      .contexto-box {
-        background: #f8f9fa;
-        border-left: 4px solid #007bff;
-        padding: 10px;
-        margin-bottom: 10px;
-        font-size: 0.85em;
-        color: #555;
-        font-style: italic;
-      }
+<head>
+  <meta charset="UTF-8" />
+  <title>Editar Datos</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      background: #f4f7f6;
+      padding: 20px;
+    }
 
-      input[type="text"] {
-        width: 100%;
-        padding: 10px;
-        border: 1px solid #ccc;
-        border-radius: 4px;
-        box-sizing: border-box;
-      }
-      button {
-        background: #28a745;
-        color: white;
-        border: none;
-        padding: 12px 20px;
-        border-radius: 4px;
-        cursor: pointer;
-        width: 100%;
-        margin-top: 20px;
-        font-size: 16px;
-        font-weight: bold;
-      }
-      button:hover {
-        background: #218838;
-      }
-      .empty-state {
-        text-align: center;
-        color: #666;
-        padding: 30px;
-      }
-    </style>
-  </head>
-  <body>
-    <div class="card">
-      <h2>Modificar datos del documento</h2>
+    .card {
+      background: white;
+      padding: 20px;
+      border-radius: 8px;
+      max-width: 800px;
+      margin: auto;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    }
 
-      <form
-        id="formularioEdicion"
-        th:action="@{/aplicar-cambios}"
-        th:object="${formulario}"
-        method="post"
-        onsubmit="redireccionarAlInicio()"
-      >
-        <div class="empty-state" th:if="${#lists.isEmpty(formulario.items)}">
-          <p>
-            ⚠️ No se detectaron huecos ni textos en rojo para rellenar en este
-            documento.
-          </p>
-          <a href="/">Volver a subir otro archivo</a>
-        </div>
+    .item {
+      margin-bottom: 25px;
+      border-bottom: 1px solid #eee;
+      padding-bottom: 15px;
+    }
 
-        <div th:each="item, stat : *{items}" class="item">
-          <label th:text="'Campo ' + ${item.posicion}"></label>
+    .original {
+      color: #d9534f;
+      font-size: 0.9em;
+      margin-bottom: 5px;
+      font-weight: bold;
+    }
 
-          <div
-            class="original"
-            th:text="'Texto a reemplazar: [' + ${item.textoOriginal} + ']'"
-          ></div>
-          <div
-            class="contexto-box"
-            th:text="'Contexto: &quot;' + ${item.contexto} + '&quot;'"
-          ></div>
+    .contexto-box {
+      background: #f8f9fa;
+      border-left: 4px solid #007bff;
+      padding: 10px;
+      margin-bottom: 10px;
+      font-size: 0.85em;
+      color: #555;
+      font-style: italic;
+    }
 
-          <input
-            type="hidden"
-            th:field="*{items[__${stat.index}__].posicion}"
-          />
-          <input
-            type="hidden"
-            th:field="*{items[__${stat.index}__].textoOriginal}"
-          />
-          <input
-            type="hidden"
-            th:field="*{items[__${stat.index}__].contexto}"
-          />
+    input[type="text"] {
+      width: 100%;
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      box-sizing: border-box;
+    }
 
-          <input
-            type="text"
-            th:field="*{items[__${stat.index}__].textoNuevo}"
-            placeholder="Escribe el nuevo dato aquí..."
-            required
-          />
-        </div>
+    button {
+      background-color: #28a745;
+      color: white;
+      border: none;
+      padding: 12px 20px;
+      border-radius: 4px;
+      cursor: pointer;
+      width: 100%;
+      font-size: 16px;
+      margin-top: 10px;
+    }
 
-        <button type="submit" th:if="${!#lists.isEmpty(formulario.items)}">
-          Generar Word y Descargar
-        </button>
-      </form>
+    button:hover {
+      background-color: #218838;
+    }
+
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+
+    .alerta-vacia {
+      background-color: #fff3cd;
+      color: #856404;
+      padding: 15px;
+      border-radius: 5px;
+      border: 1px solid #ffeeba;
+      text-align: center;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="card">
+    <div class="header">
+      <h2>Rellenar Campos</h2>
+      <a href="/">Volver a subir otro archivo</a>
     </div>
 
-    <script>
-      function redireccionarAlInicio() {
-        setTimeout(function () {
-          // Si usaste context-path='/app' en properties, cambia esto a "/app/"
-          window.location.href = "/";
-        }, 1500); // 1.5 segundos
-      }
-    </script>
-  </body>
+    <div th:if="${#lists.isEmpty(formulario.items)}" class="alerta-vacia">
+      <h3>No se han detectado campos para rellenar.</h3>
+      <p>Asegúrate de que el documento tiene texto en rojo o usa los marcadores "NNNN".</p>
+    </div>
+
+    <form th:action="@{/aplicar-cambios}" th:object="${formulario}" method="post"
+      onsubmit="setTimeout(redireccionarAlInicio, 1000);">
+      <div th:each="item, stat : *{items}" class="item">
+        <label th:text="'Campo ' + ${item.posicion}"></label>
+
+        <div class="original" th:text="'Texto a reemplazar: [' + ${item.textoOriginal} + ']'"></div>
+        <div class="contexto-box" th:text="'Contexto: &quot;' + ${item.contexto} + '&quot;'"></div>
+
+        <input type="hidden" th:field="*{items[__${stat.index}__].posicion}" />
+        <input type="hidden" th:field="*{items[__${stat.index}__].textoOriginal}" />
+        <input type="hidden" th:field="*{items[__${stat.index}__].contexto}" />
+
+        <input type="text" th:field="*{items[__${stat.index}__].textoNuevo}" placeholder="Escribe el nuevo dato aquí..."
+          required />
+      </div>
+
+      <button type="submit" th:if="${!#lists.isEmpty(formulario.items)}">
+        Generar Word y Descargar
+      </button>
+    </form>
+  </div>
+
+  <script>
+    function redireccionarAlInicio() {
+      window.location.href = "/";
+    }
+  </script>
+</body>
+
 </html>
