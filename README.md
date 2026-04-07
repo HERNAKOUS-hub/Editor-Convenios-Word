@@ -7,7 +7,7 @@ La aplicación escanea el documento, detecta de forma inteligente los huecos a r
 ## ✨ Características Principales
 
 * **Detección Inteligente de Marcadores:** Identifica campos a rellenar basándose en el color de la fuente (rojos puros o de Office) y en patrones de texto (`NNNN`, `xxxx`, espacios especiales).
-* **Escáner Profundo Recursivo:** Capaz de encontrar marcadores ocultos dentro de tablas anidadas (tablas dentro de tablas), muy comunes en documentos oficiales de la Administración.
+* **Escáner Profundo Recursivo (XML):** Capaz de encontrar marcadores ocultos en cualquier parte del documento (como tablas dentro de tablas) navegando de forma recursiva por el árbol XML nativo del archivo.
 * **Filtro Legal Avanzado:** Ignora automáticamente párrafos legales largos que estén en rojo por motivos informativos, capturando únicamente las variables reales a modificar.
 * **Interfaz Web con Contexto:** Genera formularios dinámicos mostrando la frase completa (contexto) donde se encuentra el marcador, facilitando enormemente la cumplimentación.
 * **Limpieza de Formato Automática:** El documento final generado se descarga con los textos reemplazados en color negro estándar y sin resaltados, integrándose perfectamente en el documento original.
@@ -16,7 +16,7 @@ La aplicación escanea el documento, detecta de forma inteligente los huecos a r
 
 * **Java 21**
 * **Spring Boot 3** (Web, MVC)
-* **Apache POI** (Manipulación avanzada de archivos `.docx` y XML interno)
+* **Docx4j** (Manipulación profunda del árbol XML del documento `.docx` mediante JAXB)
 * **Thymeleaf** (Motor de plantillas HTML para vistas dinámicas)
 * **HTML5 / CSS3** (Diseño frontend responsivo y sin dependencias externas)
 * **Maven** (Gestión de dependencias y empaquetado)
